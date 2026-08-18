@@ -3,46 +3,61 @@ using UnityEngine;
 
 /// <summary>
 /// Va en el prefab del cliente. Lleva el estado de si ya fue atendido en la
-/// caja, y ahora tambien que productos "compro" y los coloca fisicamente
-/// en el mostrador cuando llega al frente de la fila.
+/// caja, y ahora lleva la lista REAL de productos que fue tomando de los
+/// estantes (via TakeProductFromShelfAction) en vez de asignar productos
+/// al azar sin relacion con lo que compro de verdad.
 /// </summary>
 public class CustomerLifecycle : MonoBehaviour
 {
-    [Header("Productos asignados")]
-    [SerializeField] private int minProducts = 1;
-    [SerializeField] private int maxProducts = 3;
+    [Header("Perfil (arquetipo)")]
+    [Tooltip("Define si compra, si se queja, si hace desorden, etc. Lo asigna CustomerSpawner al instanciar, o se deja fijo en el prefab para pruebas.")]
+    [SerializeField] private CustomerProfile profile;
+
+    public CustomerProfile Profile => profile;
+    public bool WillBuy => profile == null || profile.willBuy; // sin perfil asignado, asume que compra (comportamiento anterior)
+
+    /// <summary>Llamado por CustomerSpawner (cuando exista) al instanciar el cliente con un arquetipo especifico.</summary>
+    public void SetProfile(CustomerProfile newProfile)
+    {
+        profile = newProfile;
+    }
 
     public bool HasBeenServed { get; private set; } = false;
     public bool HasPlacedProducts { get; private set; } = false;
 
-    private ProductData[] _assignedProducts;
+    private readonly List<ProductData> _purchasedProducts = new List<ProductData>();
     private readonly List<GameObject> _spawnedInstances = new List<GameObject>();
 
-    void Awake()
+    /// <summary>Llamado por TakeProductFromShelfAction cada vez que el cliente toma algo real de un estante.</summary>
+    public void AddPurchasedProduct(ProductData product)
     {
-        AssignRandomProducts();
+        if (product == null) return;
+        _purchasedProducts.Add(product);
     }
 
-    void AssignRandomProducts()
+    /// <summary>Usado por CreateMessAction (MisplacedProduct) para saber que producto puede dejar tirado. Null si no compro nada.</summary>
+    public ProductData GetFirstPurchasedProductOrNull()
     {
-        if (ProductCatalog.Instance == null)
-        {
-            Debug.LogWarning("[CustomerLifecycle] No hay ProductCatalog en la escena.");
-            _assignedProducts = new ProductData[0];
-            return;
-        }
-
-        _assignedProducts = ProductCatalog.Instance.GetRandomProducts(minProducts, maxProducts);
+        return _purchasedProducts.Count > 0 ? _purchasedProducts[0] : null;
     }
 
     /// <summary>
-    /// Instancia los productos asignados sobre el mostrador. Llamado una sola
-    /// vez, cuando el cliente llega al frente de la fila (desde WaitForTurnAction).
+    /// Instancia sobre el mostrador exactamente los productos que el cliente
+    /// tomo de verdad de los estantes. Llamado una sola vez, cuando llega
+    /// al frente de la fila (desde WaitForTurnAction).
     /// </summary>
     public void PlaceProductsOnCounter()
     {
         if (HasPlacedProducts) return;
         HasPlacedProducts = true;
+
+        Debug.Log($"[CustomerLifecycle] {name}: colocando {_purchasedProducts.Count} producto(s) comprado(s) de verdad en el mostrador.");
+
+        if (_purchasedProducts.Count == 0)
+        {
+            Debug.LogWarning($"[CustomerLifecycle] {name}: no tomo ningun producto de un estante, llega a la caja con las manos vacias.");
+            return;
+        }
 
         if (CounterDropPointManager.Instance == null)
         {
@@ -50,16 +65,23 @@ public class CustomerLifecycle : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < _assignedProducts.Length; i++)
+        for (int i = 0; i < _purchasedProducts.Count; i++)
         {
-            ProductData product = _assignedProducts[i];
-            if (product == null || product.prefab == null) continue;
+            ProductData product = _purchasedProducts[i];
+
+            if (product.prefab == null)
+            {
+                Debug.LogWarning($"[CustomerLifecycle] {name}: el ProductData '{product.productName}' no tiene 'Prefab' asignado.");
+                continue;
+            }
 
             Transform dropPoint = CounterDropPointManager.Instance.GetDropPoint(i);
             if (dropPoint == null) continue;
 
             GameObject instance = Instantiate(product.prefab, dropPoint.position, dropPoint.rotation);
             _spawnedInstances.Add(instance);
+
+            Debug.Log($"[CustomerLifecycle] {name}: coloco '{product.productName}' en {dropPoint.name}.");
         }
     }
 

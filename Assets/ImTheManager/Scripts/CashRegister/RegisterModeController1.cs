@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Orquesta el modo caja registradora completo:
@@ -8,6 +9,21 @@ using UnityEngine;
 /// </summary>
 public class RegisterModeController : MonoBehaviour
 {
+    /// <summary>
+    /// True mientras el jugador esta en modo caja (movimiento congelado,
+    /// point-and-click). Cualquier sistema puede consultarlo - por ejemplo,
+    /// SeekPlayerAndTalkAction lo chequea antes de ir a buscar al jugador,
+    /// para no interrumpirlo ni bugear la escena mientras cobra.
+    /// </summary>
+    public static bool IsPlayerInRegisterMode { get; private set; } = false;
+
+    /// <summary>
+    /// True mientras el panel de "Seguir atendiendo / Terminar turno" esta
+    /// en pantalla. RegisterBanterReactor lo chequea para no superponer
+    /// dialogo de cliente sobre ese panel.
+    /// </summary>
+    public static bool IsEndOfTransactionPanelActive { get; private set; } = false;
+
     [Header("Referencias")]
     [SerializeField] private RPS_ThirdPersonController playerMovement;
     [SerializeField] private RegisterCameraZone registerCameraZone;
@@ -44,10 +60,43 @@ public class RegisterModeController : MonoBehaviour
             registerManager.onTransactionComplete.RemoveListener(HandleTransactionComplete);
     }
 
+    void Update()
+    {
+        if (!IsPlayerInRegisterMode) return;
+        if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame) return;
+
+        TryEmergencyLeave();
+    }
+
+    // Salida de emergencia por si el jugador se queda atorado en modo caja
+    // sin ningun cliente (ej. se olvido de presionar "Terminar turno" y no
+    // hay nadie mas a quien atender). Solo funciona si NO hay un cliente
+    // esperando/siendo atendido ahora mismo, para no romper una transaccion
+    // a medias.
+    void TryEmergencyLeave()
+    {
+        bool hasCustomerWaiting = CustomerQueueManager.Instance != null
+            && CustomerQueueManager.Instance.CustomerAtFront != null;
+
+        bool hasActiveTransaction = registerManager != null
+            && registerManager.CurrentState != CashRegisterManager.RegisterState.Scanning;
+
+        if (hasCustomerWaiting || hasActiveTransaction)
+        {
+            Debug.Log("[RegisterModeController] No puedes salir con ESC mientras hay un cliente siendo atendido.");
+            return;
+        }
+
+        Debug.Log("[RegisterModeController] Salida de emergencia por ESC (sin clientes esperando).");
+        LeaveRegister();
+    }
+
     // ===== ENTRAR AL MODO CAJA ======================================================
 
     void HandleEnteredRegister()
     {
+        IsPlayerInRegisterMode = true;
+
         // Defensivo: garantiza que siempre arranquemos en estado limpio,
         // sin importar el historial previo del CashRegisterManager.
         if (registerManager != null)
@@ -66,6 +115,8 @@ public class RegisterModeController : MonoBehaviour
     {
         if (endOfTransactionPanel != null)
             endOfTransactionPanel.SetActive(true);
+
+        IsEndOfTransactionPanelActive = true;
 
         // Identificamos quien estaba siendo atendido ANTES de sacarlo de la
         // fila (LeaveQueue lo remueve de la lista, asi que hay que guardar
@@ -90,6 +141,8 @@ public class RegisterModeController : MonoBehaviour
         if (endOfTransactionPanel != null)
             endOfTransactionPanel.SetActive(false);
 
+        IsEndOfTransactionPanelActive = false;
+
         registerManager.ResetTransaction();
         // El jugador se queda en modo caja: movimiento sigue bloqueado,
         // cursor sigue libre, camara sigue en primera persona.
@@ -98,6 +151,9 @@ public class RegisterModeController : MonoBehaviour
     /// <summary>Conecta esto al boton "Terminar turno".</summary>
     public void LeaveRegister()
     {
+        IsPlayerInRegisterMode = false;
+        IsEndOfTransactionPanelActive = false;
+
         if (endOfTransactionPanel != null)
             endOfTransactionPanel.SetActive(false);
 

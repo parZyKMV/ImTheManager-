@@ -1,0 +1,20 @@
+title: WrongChange_Reaction
+---
+Customer: Wait, I think that change isn't right.
+
+-> Apologize
+    Player: Oops, sorry, that was an accident.
+    Customer: No worries, happens to everyone.
+    <<jump WrongChange_End>>
+
+-> Insist it's correct
+    Player: No, it's correct, count it again.
+    Customer: ...Fine, whatever you say.
+    <<jump WrongChange_End>>
+
+===
+
+title: WrongChange_End
+---
+Customer: Anyway, thanks.
+===

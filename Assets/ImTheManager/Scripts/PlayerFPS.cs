@@ -7,13 +7,13 @@ public class RPS_ThirdPersonController : MonoBehaviour
     // ===== INSPECTOR =====================================================
 
     [Header("Movimiento")]
-    [SerializeField] private float walkSpeed = 3f;   // velocidad base en m/s
-    [SerializeField] private float sprintMultiplier = 1.7f; // multiplicador al correr
+    [SerializeField] public float walkSpeed = 3f;   // velocidad base en m/s
+    [SerializeField] public float sprintMultiplier = 1.7f; // multiplicador al correr
     [SerializeField] private float rotationSmoothTime = 0.1f; // suavizado de rotacion
 
     [Header("Salto y gravedad")]
     [SerializeField] private float gravity = -20f; // gravedad en m/s^2
-    [SerializeField] private float jumpForce = 6f;  // impulso inicial del salto
+    [SerializeField] public float jumpForce = 6f;  // impulso inicial del salto
     [SerializeField] private float groundCheckDistance = 0.3f; // distancia del Raycast al suelo
 
     [Header("ZVelocity - blend tree del salto")]

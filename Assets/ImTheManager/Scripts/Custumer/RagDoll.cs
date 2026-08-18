@@ -56,7 +56,10 @@ public class Ragdoll : MonoBehaviour
         chest.AddForce(force, ForceMode.Impulse);
 
         if (hitEffect != null)
-            hitEffect.Play();
+        {
+            ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Destroy(instance.gameObject, 3f);
+        }
 
         Destroy(gameObject, 5f);
     }

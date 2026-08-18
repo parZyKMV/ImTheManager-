@@ -16,10 +16,10 @@ TagManager:
   - Pickupable
   - Environment
   - CounterItem
-  - 
-  - 
-  - 
-  - 
+  - Restockable
+  - Trash
+  - MisplacedProducts
+  - Custumer
   - 
   - 
   - 

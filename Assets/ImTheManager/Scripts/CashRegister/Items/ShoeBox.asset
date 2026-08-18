@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductData
   productName: Shoes
   icon: {fileID: 0}
-  price: 25
+  price: 24.99
   prefab: {fileID: 5425289963327669833, guid: 90891c8949d0d2f4cb4457391475530f, type: 3}

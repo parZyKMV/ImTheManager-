@@ -1,0 +1,46 @@
+title: Karen_Encounter
+---
+// We no longer declare $sanity here: the source of truth is now the real
+// C# SanityMeter. add_stress() adds stress to it, get_sanity() reads it
+// for the conditional branches.
+
+Karen: Excuse me?! This is NOT what I ordered!
+Karen: I've been waiting ten minutes and nobody has properly helped me.
+
+-> Apologize and offer an immediate exchange
+    Player: I'm so sorry, ma'am. Let me exchange the product right now, free of charge.
+    <<add_stress 5>>
+    Karen: Well... I suppose that's fine. Faster next time, though.
+    <<jump Karen_Resolved>>
+
+-> Explain the store's policy calmly
+    Player: I understand your frustration, but this is our return policy.
+    <<if get_sanity() >= 50>>
+        // You were already pretty stressed before this conversation: Karen notices and escalates.
+        Karen: HOW DARE YOU question me?! I want to speak to your manager RIGHT NOW!
+        <<add_stress 20>>
+        <<jump Karen_Escalate>>
+    <<else>>
+        Karen: Hmph. Fine, I understand. But don't let it happen again.
+        <<add_stress 10>>
+        <<jump Karen_Resolved>>
+    <<endif>>
+
+-> Ignore her and keep working
+    <<add_stress 25>>
+    Karen: I'm not leaving until someone helps me properly!
+    <<jump Karen_Escalate>>
+
+===
+
+title: Karen_Resolved
+---
+Karen: Thanks for your help. That wasn't so hard, was it?
+===
+
+title: Karen_Escalate
+---
+Karen: This is UNACCEPTABLE! I'm leaving a one-star review!
+<<shake_camera>>
+Karen: Whatever. Not worth my time.
+===

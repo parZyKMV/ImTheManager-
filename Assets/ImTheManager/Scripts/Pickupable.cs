@@ -10,6 +10,10 @@ public class Pickupable : MonoBehaviour
     [Header("Configuracion")]
     [SerializeField] private string interactionPrompt = "Recoger"; // texto para tu UI, por si personalizas por objeto
 
+    [Header("Lanzar")]
+    [Tooltip("Intensidad maxima del giro al azar al lanzar (grados/seg aprox). Poco para que no gire como loco.")]
+    [SerializeField] private float throwSpinAmount = 90f;
+
     private Rigidbody _rigidbody;
     private Transform _originalParent;
     private bool _isHeld = false;
@@ -58,6 +62,11 @@ public class Pickupable : MonoBehaviour
     {
         ReleasePhysics();
         _rigidbody.AddForce(force, ForceMode.VelocityChange);
+
+        // Un giro aleatorio pequeno para que no vuele "clavado" y se vea
+        // mas natural. random.insideUnitSphere le da una direccion de giro
+        // al azar en los 3 ejes, escalada por throwSpinAmount.
+        _rigidbody.angularVelocity = Random.insideUnitSphere * throwSpinAmount * Mathf.Deg2Rad;
     }
 
     // Logica compartida entre soltar y lanzar: quitarlo del holdPoint

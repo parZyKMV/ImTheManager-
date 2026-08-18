@@ -1,0 +1,20 @@
+title: ScanJoke_Encounter
+---
+Customer: Hey, you forgot to scan this one, right? Does that mean it's free?
+
+-> Laugh it off and say no
+    Player: Ha, nice try, but no.
+    Customer: Worth asking.
+    <<jump ScanJoke_End>>
+
+-> Play along
+    Player: Shhh, today's your lucky day.
+    Customer: Awesome! ...wait, are you joking?
+    <<jump ScanJoke_End>>
+
+===
+
+title: ScanJoke_End
+---
+Customer: Ok, ok, charge me normally.
+===

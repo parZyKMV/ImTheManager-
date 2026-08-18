@@ -1,0 +1,26 @@
+title: DumbQuestion_Encounter
+---
+Customer: Hey, sorry... quick question.
+Customer: If a product doesn't have a barcode, is it free?
+
+-> Explain that no, it still has to be paid for
+    Player: No, every product gets charged, whether it has a visible code or not.
+    Customer: Ah, too bad. Worth a shot though.
+    <<jump DumbQuestion_End>>
+
+-> Play along with the joke
+    Player: Shhh, don't tell anyone, but yes.
+    Customer: Awesome! Wait... are you joking?
+    <<jump DumbQuestion_End>>
+
+-> Ignore the question and keep working
+    Customer: ...Hello?
+    Customer: Ok, I get the hint.
+    <<jump DumbQuestion_End>>
+
+===
+
+title: DumbQuestion_End
+---
+Customer: Well, thanks anyway.
+===
