@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 9033536182985500835}
   - component: {fileID: 3120464946821742198}
   - component: {fileID: 3653114482470215099}
+  - component: {fileID: 5311091060093111660}
   m_Layer: 12
   m_Name: NormalCustumer
   m_TagString: Untagged
@@ -139,6 +140,8 @@ MonoBehaviour:
   - rid: 4816232769530364247
   - rid: 3045170176096207283
   - rid: 3045170308754964717
+  - rid: 3045170468118856162
+  - rid: 3045170468118856163
   m_OriginalGraph: {fileID: -7340900079615900930, guid: d0dd97aa54db40f4f8eb4f6d667cfbc7, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -159,8 +162,24 @@ MonoBehaviour:
         GUID:
           m_Value0: 14740415789038620212
           m_Value1: 3876870603978820445
-        Name: TrashPrefab
+        Name: TrashPrefabA
         m_Value: {fileID: 5759495663143001580, guid: 867f6c83ba2dcc548a86d33a484409e2, type: 3}
+    - rid: 3045170468118856162
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 8972151160151945120
+          m_Value1: 225049765396303504
+        Name: TrashPrefabB
+        m_Value: {fileID: 5062377620521798585, guid: e2dfe484a0c75c14793ce1d5c437b5cd, type: 3}
+    - rid: 3045170468118856163
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17430238752106298250
+          m_Value1: 6808153944955886305
+        Name: TrashPrefabC
+        m_Value: {fileID: 5942837112409598562, guid: a0980c5310bbce04e9117b17a27b376b, type: 3}
     - rid: 4816232769530364247
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -231,9 +250,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomerRagdoll
   minImpact: 3
   hitEffect: {fileID: 9157105887693468085, guid: c4f829cb7dd4b864caf8832ec5b1ee55, type: 3}
-  settleDuration: 1
+  settleVelocityThreshold: 0.5
+  settleGracePeriod: 0.3
+  maxAirborneTime: 5
   downDuration: 3
   skeletonRoot: {fileID: 3176471758102385680}
+  solidCollider: {fileID: 5311091060093111660}
 --- !u!114 &3120464946821742198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,9 +268,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b94483cf1765e540a14725466ccd7f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RegisterBanterReactor
-  wrongChangeDialogueNode: WrongChange_Reaction
+  wrongChangeDialogueNodes:
+  - WrongChange_Reaction
+  - Register_WrongChange_01_EN
+  - Register_WrongChange_02_EN
+  - Register_WrongChange_03_EN
   jokeChance: 0.3
-  jokeDialogueNode: ScanJoke_Encounter
+  jokeDialogueNodes:
+  - ScanJoke_Encounter
+  - Register_RandomJoke_01_EN
+  - Register_RandomJoke_02_EN
+  - Register_RandomJoke_03_EN
 --- !u!114 &3653114482470215099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +291,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f8113bef3cb27f4d9462fedd1f73fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerPickupable
+--- !u!136 &5311091060093111660
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448370580683453747}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3249278475013202923
 PrefabInstance:
   m_ObjectHideFlags: 0

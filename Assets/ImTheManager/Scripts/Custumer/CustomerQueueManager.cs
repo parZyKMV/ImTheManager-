@@ -73,6 +73,16 @@ public class CustomerQueueManager : MonoBehaviour
     /// <summary>El cliente que esta actualmente al frente (siendo atendido), o null si la fila esta vacia.</summary>
     public Transform CustomerAtFront => _customersInQueue.Count > 0 ? _customersInQueue[0] : null;
 
+    /// <summary>Devuelve el slot de fila asignado a este cliente, o null si no esta en la fila.</summary>
+    public Transform GetSlotForCustomer(Transform customer)
+    {
+        int index = _customersInQueue.IndexOf(customer);
+        if (index == -1 || queueSlots == null || index >= queueSlots.Length)
+            return null;
+
+        return queueSlots[index];
+    }
+
     /// <summary>
     /// Llamar cuando el cliente al frente termina de ser atendido y se va.
     /// TODO: conectar esto a CashRegisterManager.onTransactionComplete
@@ -93,5 +103,26 @@ public class CustomerQueueManager : MonoBehaviour
             if (agent != null)
                 agent.SetDestination(queueSlots[i].position);
         }
+    }
+
+    /// <summary>
+    /// Destruye a TODOS los clientes activos en la escena (esten o no en
+    /// la fila - tambien saca a los que estan comprando/explorando) y
+    /// vacia la fila. Uso: transicion entre dias, para que el dia nuevo
+    /// no arranque con clientes de ayer parados por ahi. Los desordenes
+    /// (basura, estantes, productos fuera de lugar) NO se tocan aca -
+    /// si no los limpiaste, siguen ahi manana.
+    /// </summary>
+    public void DespawnAllCustomers()
+    {
+        var allCustomers = Object.FindObjectsByType<CustomerLifecycle>(FindObjectsSortMode.None);
+
+        foreach (var customer in allCustomers)
+        {
+            if (customer != null)
+                Object.Destroy(customer.gameObject);
+        }
+
+        _customersInQueue.Clear();
     }
 }

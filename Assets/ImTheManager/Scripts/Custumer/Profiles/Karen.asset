@@ -14,12 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomerProfile
   profileName: Karen
   willBuy: 1
-  exploreFirstChance: 0.18
-  complaintChance: 0.929
-  complaintTriggers: 000000000100000002000000
+  exploreFirstChance: 0.261
+  complaintChance: 1
+  complaintTriggers: 00000000010000000200000003000000
   complaintStressAmount: 20
   messChance: 0
   possibleMessTypes: 02000000
-  askQuestionChance: 0
-  dialogueStartNode: Karen_Encounter
+  askQuestionChance: 0.153
+  dialogueStartNodes:
+  - Karen_Encounter
+  - Karen_PriceComplaint_EN
+  - Karen_DirtyFloor_EN
+  - Karen_CouponComplaint_EN
+  - Karen_BrokenDisplay_EN
   targetOverrideTag: 

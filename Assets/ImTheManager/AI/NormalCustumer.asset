@@ -123,7 +123,7 @@ MonoBehaviour:
   - rid: 3045170173392191565
   - rid: 3045170173392191566
   - rid: 3045170173392191567
-  m_VersionTimestamp: 639216235423058295
+  m_VersionTimestamp: 639228237906660944
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: 9042517271134718160}
   m_RuntimeGraph: {fileID: 4058075014472944517}
@@ -345,9 +345,9 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
-    - Name: TrashPrefab
+    - Name: TrashPrefabs
       Type:
-        m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        m_SerializableType: UnityEngine.GameObject[], UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     - Name: PickupableLayerName
@@ -2718,8 +2718,8 @@ MonoBehaviour:
           rid: 3045170127675327072
         ShoppingPoint:
           rid: 3045170127675327073
-        TrashPrefab:
-          rid: 3045170127675327076
+        TrashPrefabs:
+          rid: -2
         PickupableLayerName:
           rid: 3045170176096207301
     - rid: 3045170176096207299

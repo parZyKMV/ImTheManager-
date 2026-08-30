@@ -17,8 +17,12 @@ public class SimpleCustumerSpawner : MonoBehaviour
     {
         if (!CanSpawnRightNow()) return;
 
+        float currentInterval = DifficultyCurve.Instance != null
+            ? DifficultyCurve.Instance.GetCustomerSpawnInterval()
+            : tiempoDeEspera;
+
         cronometro += Time.deltaTime; // Suma el tiempo transcurrido por frame
-        if (cronometro >= tiempoDeEspera)
+        if (cronometro >= currentInterval)
         {
             SpawnearObjeto();
             cronometro = 0f; // Reinicia el temporizador

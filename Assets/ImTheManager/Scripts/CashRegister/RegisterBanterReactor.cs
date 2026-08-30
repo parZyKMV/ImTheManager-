@@ -12,11 +12,13 @@ using UnityEngine;
 public class RegisterBanterReactor : MonoBehaviour
 {
     [Header("Reacción al cambio incorrecto")]
-    [SerializeField] private string wrongChangeDialogueNode = "WrongChange_Reaction";
+    [Tooltip("Varias reacciones posibles - se elige una al azar cada vez.")]
+    [SerializeField] private string[] wrongChangeDialogueNodes = { "WrongChange_Reaction" };
 
     [Header("Chiste random al llegar a la caja")]
     [Range(0f, 1f)][SerializeField] private float jokeChance = 0.3f;
-    [SerializeField] private string jokeDialogueNode = "ScanJoke_Encounter";
+    [Tooltip("Varios chistes posibles - se elige uno al azar cada vez.")]
+    [SerializeField] private string[] jokeDialogueNodes = { "ScanJoke_Encounter" };
 
     private bool _hasTriedJoke = false;
     private bool _hasPendingWrongChangeReaction = false;
@@ -74,9 +76,11 @@ public class RegisterBanterReactor : MonoBehaviour
     void TryTellJoke()
     {
         if (Random.value > jokeChance) return;
+        if (jokeDialogueNodes == null || jokeDialogueNodes.Length == 0) return;
         if (KarenEventTrigger.Instance == null || KarenEventTrigger.Instance.IsActive) return;
 
-        KarenEventTrigger.Instance.TriggerEncounterWithoutLocking(jokeDialogueNode);
+        string node = jokeDialogueNodes[Random.Range(0, jokeDialogueNodes.Length)];
+        KarenEventTrigger.Instance.TriggerEncounterWithoutLocking(node);
     }
 
     void HandleChangeResult(bool wasCorrect)
@@ -99,8 +103,10 @@ public class RegisterBanterReactor : MonoBehaviour
 
     void TryReactToWrongChange()
     {
+        if (wrongChangeDialogueNodes == null || wrongChangeDialogueNodes.Length == 0) return;
         if (KarenEventTrigger.Instance == null || KarenEventTrigger.Instance.IsActive) return;
 
-        KarenEventTrigger.Instance.TriggerEncounterWithoutLocking(wrongChangeDialogueNode);
+        string node = wrongChangeDialogueNodes[Random.Range(0, wrongChangeDialogueNodes.Length)];
+        KarenEventTrigger.Instance.TriggerEncounterWithoutLocking(node);
     }
 }

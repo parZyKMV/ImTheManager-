@@ -1,0 +1,65 @@
+title: Register_WrongChange_01_EN
+---
+Customer: Excuse me... I think you gave me too much change.
+
+Player: Really?
+
+Customer: Yes. I'm two dollars short on honesty, but two dollars over on cash.
+
+-> Correct the change
+    Player: Thanks for letting me know. Here's the correct change.
+    Customer: Perfect. My conscience can rest again.
+===
+
+title: Register_WrongChange_02_EN
+---
+Customer: I think the change is wrong.
+
+Player: Did the system mess up?
+
+Customer: I don't know. But I have more money than when I walked in.
+
+Player: ...That seems important.
+===
+
+title: Register_WrongChange_03_EN
+---
+Customer: Excuse me, you gave me an extra dollar.
+
+Player: Thanks for telling me.
+
+Customer: No problem. I already mentally spent the other nine.
+===
+
+title: Register_RandomJoke_01_EN
+---
+Customer: You know what's great about shopping here?
+
+Player: What?
+
+Customer: I always end up buying something I didn't need.
+===
+
+title: Register_RandomJoke_02_EN
+---
+Customer: Do you sell gift cards?
+
+Player: Yes.
+
+Customer: Perfect. Because I have no idea what to get my family.
+
+Player: How about a gift card?
+
+Customer: Exactly. How convenient.
+===
+
+title: Register_RandomJoke_03_EN
+---
+Customer: Do you know how long I've been standing in this line?
+
+Player: No.
+
+Customer: Me neither.
+
+Customer: But I already feel like part of the family.
+===

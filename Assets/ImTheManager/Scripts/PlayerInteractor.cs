@@ -24,6 +24,7 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private LayerMask restockableLayer;      // layer de los estantes (ShelfRestockSystem)
     [SerializeField] private LayerMask trashLayer;            // layer de los TrashItem
     [SerializeField] private LayerMask customerLayer;         // layer de los clientes (solo se usa durante Rage Mode)
+    [SerializeField] private Animator animator;
 
     [Header("Cargar objetos")]
     [SerializeField] private Transform holdPoint; // punto (hijo de la camara) donde se sostiene la caja
@@ -67,14 +68,16 @@ public class PlayerInteractor : MonoBehaviour
         }
 
         _interactAction = actions.FindAction("Interact");
-        _throwAction = new InputAction("Throw", binding: "<Mouse>/leftButton"); // fallback si no hay en el asset
-        _throwAction.Enable();
 
         if (_interactAction == null)
             Debug.LogWarning("[PlayerInteractor] No se encontro la accion 'Interact'. Agregala en tu Input Actions asset (boton, ej. tecla E).");
 
-        if (_throwAction == null)
-            Debug.LogWarning("[PlayerInteractor] No se encontro la accion 'Throw'. Agregala en tu Input Actions asset (boton, ej. click derecho o tecla G).");
+        // El Throw se crea a mano en vez de buscarlo en el Input Actions
+        // asset: ese asset ha perdido la accion "Throw" varias veces al
+        // reabrir el proyecto (problema de guardado de Unity, no de este
+        // script) - crearla directo en codigo la hace inmune a eso.
+        _throwAction = new InputAction("Throw", binding: "<Mouse>/leftButton");
+        _throwAction.Enable();
 
         if (interactionOrigin == null && Camera.main != null)
             interactionOrigin = Camera.main.transform;
@@ -90,6 +93,11 @@ public class PlayerInteractor : MonoBehaviour
     {
         _interactAction?.Disable();
         _throwAction?.Disable();
+    }
+
+    void OnDestroy()
+    {
+        _throwAction?.Dispose();
     }
 
     // ===== UPDATE =============================================================
@@ -353,6 +361,10 @@ public class PlayerInteractor : MonoBehaviour
         _heldCustomer = customer;
         customer.OnPickedUp(holdPoint);
 
+        // Misma animacion de "cargando algo" que se usa para cajas -
+        // agarrar un cliente durante Rage Mode se ve igual que cargar un objeto.
+        animator?.SetBool("PickUp", true);
+
         if (promptUI != null) promptUI.SetActive(false);
         if (quantityText != null) quantityText.gameObject.SetActive(false);
     }
@@ -360,6 +372,8 @@ public class PlayerInteractor : MonoBehaviour
     void DropCustomer()
     {
         if (_heldCustomer == null) return;
+
+        animator?.SetBool("PickUp", false);
 
         _heldCustomer.OnDropped();
         _heldCustomer = null;
@@ -375,7 +389,10 @@ public class PlayerInteractor : MonoBehaviour
         // Si la caja quedo vacia, StockBox.RemoveUnits ya la destruyo solo -
         // liberamos la referencia para que el jugador quede con las manos libres.
         if (box == null || box.Quantity <= 0)
+        {
+            animator?.SetBool("PickUp", false);
             _heldPickupable = null;
+        }
     }
 
     void TryReturnHeldProductToShelf(ScannableProduct product)
@@ -386,6 +403,8 @@ public class PlayerInteractor : MonoBehaviour
         Debug.Log($"[PlayerInteractor] Devolvio '{product.ProductData?.productName}' a su estante.");
 
         product.GetComponent<MisplacedProductMarker>()?.MarkCleaned();
+
+        animator?.SetBool("PickUp", false);
 
         Destroy(product.gameObject);
         _heldPickupable = null;
@@ -407,6 +426,8 @@ public class PlayerInteractor : MonoBehaviour
         _heldPickupable = pickupable;
         pickupable.OnPickedUp(holdPoint);
 
+        animator?.SetBool("PickUp", true);
+
         // Mientras cargamos algo, dejamos de mostrar el prompt de "Recoger".
         if (promptUI != null)
             promptUI.SetActive(false);
@@ -418,6 +439,8 @@ public class PlayerInteractor : MonoBehaviour
     void DropCurrent()
     {
         if (_heldPickupable == null) return;
+
+        animator?.SetBool("PickUp", false);
 
         _heldPickupable.OnDropped();
         _heldPickupable = null;
@@ -472,6 +495,10 @@ public class PlayerInteractor : MonoBehaviour
     {
         Vector3 throwDirection = interactionOrigin != null ? interactionOrigin.forward : transform.forward;
         throwDirection += Vector3.up * throwUpwardBoost;
+
+        // El bool de animacion se apaga en los dos casos (cliente u objeto) -
+        // ya sea que lo tires o lo lances, dejamos de "cargar" algo.
+        animator?.SetBool("PickUp", false);
 
         if (_heldCustomer != null)
         {

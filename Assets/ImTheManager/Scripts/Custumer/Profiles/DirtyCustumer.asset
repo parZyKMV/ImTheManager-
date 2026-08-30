@@ -20,6 +20,9 @@ MonoBehaviour:
   complaintStressAmount: 10
   messChance: 1
   possibleMessTypes: 01000000
-  askQuestionChance: 0.194
-  dialogueStartNode: DumbQuestion_Encounter
+  askQuestionChance: 0.095
+  dialogueStartNodes:
+  - DumbQuestion_Encounter
+  - Customer_DoorQuestion_EN
+  - Customer_ReceiptQuestion_EN
   targetOverrideTag: 

@@ -24,7 +24,12 @@ public partial class ShouldComplainCondition : Condition
         bool emptyShelfTriggered = shelf != null && shelf.IsEmpty && ContainsTrigger(profile, ComplaintTrigger.EmptyShelf);
         if (!emptyShelfTriggered) return false;
 
-        return UnityEngine.Random.value <= profile.complaintChance;
+        // La dificultad escala la probabilidad segun el dia (dia 10 se
+        // queja mas seguido que el dia 1, sin tocar los datos del profile).
+        float difficultyMultiplier = DifficultyCurve.Instance != null ? DifficultyCurve.Instance.GetDifficultyMultiplier() : 1f;
+        float effectiveChance = Mathf.Clamp01(profile.complaintChance * difficultyMultiplier);
+
+        return UnityEngine.Random.value <= effectiveChance;
     }
 
     bool ContainsTrigger(CustomerProfile profile, ComplaintTrigger trigger)

@@ -84,6 +84,20 @@ public class ChangeMinigameController : MonoBehaviour
             panel.SetActive(false);
     }
 
+    /// <summary>
+    /// Cierra el panel a la fuerza, sin confirmar ningun cambio. Uso:
+    /// cuando el turno termina de golpe (RegisterModeController.LeaveRegister)
+    /// mientras el jugador estaba a mitad de dar el cambio - sin esto, el
+    /// panel se queda pegado en pantalla para siempre.
+    /// </summary>
+    public void Close()
+    {
+        _selectedAmount = 0f;
+
+        if (panel != null)
+            panel.SetActive(false);
+    }
+
     // ===== UI =====================================================================
 
     void UpdateTexts(float changeOwed)

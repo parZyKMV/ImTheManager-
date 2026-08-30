@@ -16,7 +16,10 @@ public partial class ShouldCreateMessCondition : Condition
         var profile = lifecycle?.Profile;
         if (profile == null) return false;
 
-        return UnityEngine.Random.value <= profile.messChance;
+        float difficultyMultiplier = DifficultyCurve.Instance != null ? DifficultyCurve.Instance.GetDifficultyMultiplier() : 1f;
+        float effectiveChance = Mathf.Clamp01(profile.messChance * difficultyMultiplier);
+
+        return UnityEngine.Random.value <= effectiveChance;
     }
 
     public override void OnStart()

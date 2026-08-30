@@ -8,8 +8,8 @@ using Action = Unity.Behavior.Action;
 /// Nodo Action: el cliente deja un desorden real. Elige un tipo al azar de
 /// profile.possibleMessTypes y dispara la mecanica correspondiente:
 /// - ShelfDisorder: desordena el ShelfSlot al que vino (necesita ShoppingPoint)
-/// - Trash: instancia un TrashItem en su posicion actual
-/// - MisplacedProduct: instancia un producto real (de lo que compro) en su posicion actual
+/// - Trash: instancia un TrashItem al azar (de varios posibles) en su posicion actual
+/// - MisplacedProduct: instancia un producto real del estante en su posicion actual
 /// Solo se ejecuta cuando ShouldCreateMessCondition (antes en la misma Sequence) ya evaluo true.
 /// </summary>
 [Serializable, GeneratePropertyBag]
@@ -21,7 +21,12 @@ public partial class CreateMessAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Agent;
     [SerializeReference] public BlackboardVariable<GameObject> ShoppingPoint; // necesario solo para ShelfDisorder
-    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefab; // prefab con TrashItem
+    [Tooltip("Varios prefabs posibles de basura - se elige uno al azar cada vez. Deja vacio (None) los que no uses.")]
+    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefabA;
+    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefabB;
+    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefabC;
+    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefabD;
+    [SerializeReference] public BlackboardVariable<GameObject> TrashPrefabE;
     [SerializeReference] public BlackboardVariable<string> PickupableLayerName = new("Pickupable");
 
     protected override Status OnStart()
@@ -93,14 +98,26 @@ public partial class CreateMessAction : Action
 
     void CreateTrash()
     {
-        if (TrashPrefab?.Value == null)
+        // Junta los prefabs que si tengan algo asignado (deja los slots
+        // sin usar en None, no hace falta llenar los 5).
+        System.Collections.Generic.List<GameObject> available = new System.Collections.Generic.List<GameObject>();
+
+        if (TrashPrefabA?.Value != null) available.Add(TrashPrefabA.Value);
+        if (TrashPrefabB?.Value != null) available.Add(TrashPrefabB.Value);
+        if (TrashPrefabC?.Value != null) available.Add(TrashPrefabC.Value);
+        if (TrashPrefabD?.Value != null) available.Add(TrashPrefabD.Value);
+        if (TrashPrefabE?.Value != null) available.Add(TrashPrefabE.Value);
+
+        if (available.Count == 0)
         {
-            Debug.LogWarning("[CreateMessAction] Trash elegido pero no hay 'Trash Prefab' asignado en el nodo.");
+            Debug.LogWarning("[CreateMessAction] Trash elegido pero no hay ningun 'Trash Prefab' (A-E) asignado en el nodo.");
             return;
         }
 
-        UnityEngine.Object.Instantiate(TrashPrefab.Value, Agent.Value.transform.position, Quaternion.identity);
-        Debug.Log($"[CreateMessAction] {Agent.Value.name} tiro basura en {Agent.Value.transform.position}.");
+        GameObject chosenPrefab = available[UnityEngine.Random.Range(0, available.Count)];
+
+        UnityEngine.Object.Instantiate(chosenPrefab, Agent.Value.transform.position, Quaternion.identity);
+        Debug.Log($"[CreateMessAction] {Agent.Value.name} tiro basura ('{chosenPrefab.name}') en {Agent.Value.transform.position}.");
     }
 
     void CreateMisplacedProduct(CustomerLifecycle lifecycle)

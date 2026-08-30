@@ -85,15 +85,17 @@ public partial class SeekPlayerAndTalkAction : Action
             Debug.Log($"[SeekPlayerAndTalkAction] {Agent.Value.name} llego al jugador.");
 
             var lifecycle = Agent.Value.GetComponent<CustomerLifecycle>();
-            string node = lifecycle?.Profile?.dialogueStartNode;
+            string[] nodes = lifecycle?.Profile?.dialogueStartNodes;
 
-            Debug.Log($"[SeekPlayerAndTalkAction] {Agent.Value.name}: profile='{lifecycle?.Profile?.name}', dialogueStartNode='{node}'.");
+            Debug.Log($"[SeekPlayerAndTalkAction] {Agent.Value.name}: profile='{lifecycle?.Profile?.name}', dialogueStartNodes.Length={nodes?.Length ?? 0}.");
 
-            if (string.IsNullOrEmpty(node))
+            if (nodes == null || nodes.Length == 0)
             {
-                Debug.LogWarning($"[SeekPlayerAndTalkAction] {Agent.Value.name}: su CustomerProfile no tiene 'Dialogue Start Node' configurado.");
+                Debug.LogWarning($"[SeekPlayerAndTalkAction] {Agent.Value.name}: su CustomerProfile no tiene ningun 'Dialogue Start Node' configurado.");
                 return Status.Failure;
             }
+
+            string node = nodes[UnityEngine.Random.Range(0, nodes.Length)];
 
             if (KarenEventTrigger.Instance == null)
             {

@@ -37,8 +37,8 @@ public class CustomerProfile : ScriptableObject
     [Range(0f, 1f)] public float askQuestionChance = 0f;
 
     [Header("Dialogo (opcional)")]
-    [Tooltip("Nodo de Yarn a usar si este perfil dispara dialogo (ej. Karen -> Karen_Encounter, Curioso -> DumbQuestion_Encounter).")]
-    public string dialogueStartNode;
+    [Tooltip("Nodos de Yarn posibles si este perfil dispara dialogo (ej. Karen -> varias quejas distintas). Se elige uno al azar cada vez que le toca hablar.")]
+    public string[] dialogueStartNodes;
 
     [Header("Destino alternativo (opcional, Fase 2)")]
     [Tooltip("Ej. 'Bathroom' para el cliente que busca el bano. Vacio = comportamiento normal.")]

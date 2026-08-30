@@ -1,0 +1,55 @@
+title: Customer_DoorQuestion_EN
+---
+Customer: Excuse me, is this door the entrance?
+
+Player: Yes.
+
+Customer: And the other door?
+
+Player: That's the exit.
+
+Customer: Oh... so the entrance is for entering.
+
+Player: Exactly.
+
+Customer: Excellent. Thank you.
+===
+
+title: Customer_FreezerQuestion_EN
+---
+Customer: Excuse me, are the frozen products cold?
+
+Player: ...Yes.
+
+Customer: Even when they're in the freezer?
+
+Player: Especially when they're in the freezer.
+
+Customer: Makes sense. Thanks.
+===
+
+title: Customer_SelfCheckoutQuestion_EN
+---
+Customer: Excuse me, is this self-checkout so I can do the work myself?
+
+Player: Technically, yes.
+
+Customer: And do I get paid for doing it?
+
+Player: No.
+
+Customer: Then this seems like a bad deal.
+===
+
+title: Customer_ReceiptQuestion_EN
+---
+Customer: Excuse me, does the receipt print after I pay?
+
+Player: Yes.
+
+Customer: Not before?
+
+Player: No.
+
+Customer: Good. I just wanted to make sure the paper wasn't getting ahead of itself.
+===

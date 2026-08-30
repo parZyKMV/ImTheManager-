@@ -16,7 +16,7 @@ public class DayCycleManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private ShiftClock shiftClock;
 
-    [Header("Configuración")]
+    [Header("Configuracion")]
     [Tooltip("Si esta activado, el primer turno arranca solo al cargar la escena. Desactivalo si usas ClockInStation para que el jugador tenga que fichar primero.")]
     [SerializeField] private bool autoStartFirstDay = true;
 
@@ -60,7 +60,8 @@ public class DayCycleManager : MonoBehaviour
         }
         // Si autoStartFirstDay esta desactivado, el turno queda esperando
         // a que algo externo llame StartDay() - ej. ClockInStation cuando
-        // el jugador ficha.
+        // el jugador ficha. Esto pasa TODOS los dias ahora, no solo el
+        // primero (ver AdvanceToNextDay).
     }
 
     /// <summary>Arranca un turno: resetea el SanityMeter (fresco cada dia) y prende el reloj.</summary>
@@ -92,7 +93,12 @@ public class DayCycleManager : MonoBehaviour
         onShiftEnded?.Invoke();
     }
 
-    /// <summary>Llamalo desde el boton "Continuar al Dia X" de EndOfShiftUI.</summary>
+    /// <summary>
+    /// Llamalo desde el boton "Continuar al Dia X" de EndOfShiftUI. Ya NO
+    /// arranca el turno automaticamente - solo avanza el numero de dia y
+    /// deja todo listo para que el jugador tenga que volver a fichar en
+    /// ClockInStation, TODOS los dias (antes solo pasaba el dia 1).
+    /// </summary>
     public void AdvanceToNextDay()
     {
         if (ProgressionData.Instance == null)
@@ -109,6 +115,11 @@ public class DayCycleManager : MonoBehaviour
         }
 
         ProgressionData.Instance.AdvanceDay();
-        StartDay(ProgressionData.Instance.CurrentDay);
+
+        // HasShiftStarted vuelve a false: ClockInStation va a mostrar su
+        // prompt de nuevo, y nada (spawner, etc.) va a correr hasta que el
+        // jugador fiche para este nuevo dia.
+        HasShiftStarted = false;
+        CurrentPhase = DayCyclePhase.Shift;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -66,11 +66,18 @@ public class ShelfSlot : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_debugTakeOneAction == null) return;
+        if (_debugTakeOneAction != null)
+        {
+            _debugTakeOneAction.performed -= OnDebugTakeOnePerformed;
+            _debugTakeOneAction.Disable();
+            _debugTakeOneAction.Dispose();
+        }
 
-        _debugTakeOneAction.performed -= OnDebugTakeOnePerformed;
-        _debugTakeOneAction.Disable();
-        _debugTakeOneAction.Dispose();
+        _debugRestockAction?.Disable();
+        _debugRestockAction?.Dispose();
+
+        _debugDisorderedAction?.Disable();
+        _debugDisorderedAction?.Dispose();
     }
 
     void OnDebugTakeOnePerformed(InputAction.CallbackContext ctx) => TakeOne();
@@ -162,7 +169,7 @@ public class ShelfSlot : MonoBehaviour
             if (instance == null) continue;
             float randomY = Random.Range(0f, 360f);
             instance.transform.rotation = Quaternion.Euler(0f, randomY, 0f);
-            
+
         }
     }
 
@@ -189,6 +196,20 @@ public class ShelfSlot : MonoBehaviour
         {
             int index = _displayedInstances.Count;
             GameObject instance = Instantiate(productType.prefab, displayPoints[index].position, displayPoints[index].rotation, transform);
+
+            // Instantiate(prefab, pos, rot, parent) NO ajusta la escala - si
+            // el estante (el padre) tiene una escala distinta de 1, el
+            // producto hereda esa escala multiplicada y se ve mas grande/chico
+            // que su tamano real. Compensamos dividiendo por la escala del
+            // padre, para que la escala final en mundo coincida con la del prefab.
+            Vector3 parentLossyScale = transform.lossyScale;
+            Vector3 prefabScale = productType.prefab.transform.localScale;
+            instance.transform.localScale = new Vector3(
+                parentLossyScale.x != 0f ? prefabScale.x / parentLossyScale.x : prefabScale.x,
+                parentLossyScale.y != 0f ? prefabScale.y / parentLossyScale.y : prefabScale.y,
+                parentLossyScale.z != 0f ? prefabScale.z / parentLossyScale.z : prefabScale.z
+            );
+
             MakeDisplayOnly(instance);
             _displayedInstances.Add(instance);
         }
@@ -203,7 +224,7 @@ public class ShelfSlot : MonoBehaviour
     }
 
     // Los productos que se ven en el estante son puramente decorativos:
-    // sin fisica real y sin poder recogerlos directo (eso rompería el loop
+    // sin fisica real y sin poder recogerlos directo (eso romperï¿½a el loop
     // de comprar/reabastecer). El mismo prefab se sigue usando para que se
     // vea identico, solo se desactivan las partes "funcionales".
     void MakeDisplayOnly(GameObject instance)

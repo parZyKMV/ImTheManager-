@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class RegisterModeController : MonoBehaviour
 {
+    public static RegisterModeController Instance { get; private set; }
+
     /// <summary>
     /// True mientras el jugador esta en modo caja (movimiento congelado,
     /// point-and-click). Cualquier sistema puede consultarlo - por ejemplo,
@@ -31,6 +33,7 @@ public class RegisterModeController : MonoBehaviour
     [SerializeField] private CounterItemDragController itemDragController;
     [SerializeField] private RegisterCameraLookController cameraLookController;
     [SerializeField] private RegisterChargeTrigger chargeTrigger;
+    [SerializeField] private ChangeMinigameController changeMinigame;
 
     [Header("Modelo del jugador")]
     [Tooltip("Renderers del modelo del jugador (torso, cabeza, etc). Se ocultan " +
@@ -41,6 +44,17 @@ public class RegisterModeController : MonoBehaviour
     [Header("UI de fin de transaccion")]
     [Tooltip("Panel con los botones 'Seguir atendiendo' y 'Terminar turno'.")]
     [SerializeField] private GameObject endOfTransactionPanel;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     void OnEnable()
     {
@@ -58,6 +72,12 @@ public class RegisterModeController : MonoBehaviour
 
         if (registerManager != null)
             registerManager.onTransactionComplete.RemoveListener(HandleTransactionComplete);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     void Update()
@@ -88,6 +108,23 @@ public class RegisterModeController : MonoBehaviour
         }
 
         Debug.Log("[RegisterModeController] Salida de emergencia por ESC (sin clientes esperando).");
+        LeaveRegister();
+    }
+
+    /// <summary>
+    /// Salida FORZADA del modo caja, sin importar si hay transaccion en
+    /// curso o cliente esperando - a diferencia de la salida por ESC (que
+    /// respeta una transaccion activa), esta se usa SOLO cuando el turno
+    /// termina de golpe (fin de dia + teletransporte) y hay que garantizar
+    /// que el jugador salga del modo caja pase lo que pase, para que la
+    /// camara/UI de la caja no se quede pegada mientras lo mandamos a
+    /// otro lado de la tienda.
+    /// </summary>
+    public void ForceExitForShiftEnd()
+    {
+        if (!IsPlayerInRegisterMode) return;
+
+        Debug.Log("[RegisterModeController] Salida forzada del modo caja (fin de turno).");
         LeaveRegister();
     }
 
@@ -156,6 +193,12 @@ public class RegisterModeController : MonoBehaviour
 
         if (endOfTransactionPanel != null)
             endOfTransactionPanel.SetActive(false);
+
+        // Por si el jugador estaba a mitad de dar el cambio (panel de
+        // billetes/monedas abierto) cuando se forzo la salida - sin esto,
+        // ese panel se queda pegado en pantalla para siempre.
+        if (changeMinigame != null)
+            changeMinigame.Close();
 
         registerManager.ResetTransaction();
         registerCameraZone.ForceExitRegisterView();

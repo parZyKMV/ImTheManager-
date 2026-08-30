@@ -1,0 +1,173 @@
+title: Karen_PriceComplaint_EN
+---
+Karen: Excuse me! Can you explain why this product costs more here than it does on the website?
+
+Karen: I shouldn't have to pay more just because I came to the actual store!
+
+-> Explain the price difference
+    Player: Sometimes online prices have different promotions than the ones in the store.
+    Karen: So I have to buy it online while I'm literally standing in front of the product?
+    <<if get_sanity() >= 50>>
+        Karen: This is ridiculous! I want to speak to someone who can actually do something about this!
+        <<add_stress 20>>
+        <<jump Karen_PriceEscalation_EN>>
+    <<else>>
+        <<add_stress 8>>
+        Karen: Well... I'm not happy about it, but I suppose that makes sense.
+        <<jump Karen_PriceResolved_EN>>
+    <<endif>>
+
+-> Offer to check the price
+    Player: Let me check if we can match the online price.
+    <<add_stress 5>>
+    Karen: You'd better. I'm not paying extra for something that costs less online.
+    <<jump Karen_PriceResolved_EN>>
+
+-> Tell her to buy it online
+    Player: If you want the online price, you can purchase it directly from the website.
+    <<add_stress 20>>
+    Karen: Are you telling me to do your job from my phone?
+    <<jump Karen_PriceEscalation_EN>>
+===
+
+title: Karen_PriceResolved_EN
+---
+Karen: Fine. Thank you for checking the price.
+
+Karen: Although I still think the store should make this easier.
+===
+
+title: Karen_PriceEscalation_EN
+---
+Karen: I want to speak to the manager!
+
+Karen: And I hope they can explain why a website has more power than the employees.
+===
+
+title: Karen_DirtyFloor_EN
+---
+Karen: Excuse me! Do you work here?
+
+Player: Yes. Can I help you?
+
+Karen: There's a small stain on the floor, and I've spent five minutes trying not to step on it.
+
+-> Apologize and clean it
+    Player: I'm sorry. I'll take care of it right now.
+    <<add_stress 5>>
+    Karen: Thank you. Finally, someone is paying attention.
+    <<jump Karen_FloorResolved_EN>>
+
+-> Explain that someone will clean it
+    Player: We've already reported it. Someone should be here soon.
+    <<add_stress 12>>
+    Karen: "Soon" isn't a time. When exactly?
+    <<jump Karen_FloorEscalation_EN>>
+
+-> Ignore the complaint
+    <<add_stress 20>>
+    Karen: Unbelievable! Do I have to clean the floor myself?
+    <<jump Karen_FloorEscalation_EN>>
+===
+
+title: Karen_FloorResolved_EN
+---
+Karen: Much better.
+
+Karen: I don't know how such a small stain turned into such a big problem.
+===
+
+title: Karen_FloorEscalation_EN
+---
+Karen: This is a SAFETY issue.
+
+Karen: I'm going to leave a review about this.
+===
+
+title: Karen_CouponComplaint_EN
+---
+Karen: Excuse me! This coupon says I get a discount, but the system won't accept it.
+
+Player: Let me take a look.
+
+Karen: I already looked at it. It clearly says "valid in store."
+
+-> Check the coupon
+    Player: I'll check the terms and see what's going on.
+    <<add_stress 5>>
+    Karen: Good. That's exactly what I expected someone to do.
+    <<jump Karen_CouponResolved_EN>>
+
+-> Explain that it may have restrictions
+    Player: It might have some restrictions or an expiration date.
+    <<if get_sanity() >= 50>>
+        Karen: I don't need an explanation! I need it to WORK!
+        <<add_stress 18>>
+        <<jump Karen_CouponEscalation_EN>>
+    <<else>>
+        Karen: Hmph. Then check it.
+        <<add_stress 8>>
+        <<jump Karen_CouponResolved_EN>>
+    <<endif>>
+
+-> Tell her to read the terms
+    Player: Maybe we should check the fine print on the coupon.
+    <<add_stress 15>>
+    Karen: Are you saying I can't read?
+    <<jump Karen_CouponEscalation_EN>>
+===
+
+title: Karen_CouponResolved_EN
+---
+Karen: Oh. I see.
+
+Karen: Well, thank you for explaining it.
+===
+
+title: Karen_CouponEscalation_EN
+---
+Karen: This shouldn't be this complicated!
+
+Karen: I'm going to speak to the manager.
+===
+
+title: Karen_BrokenDisplay_EN
+---
+Karen: Excuse me! Who is supposed to fix this?
+
+Player: What's wrong?
+
+Karen: This sign is crooked. I've been looking at it since I walked in!
+
+-> Fix the sign
+    Player: You're right. Let me straighten it out.
+    <<add_stress 5>>
+    Karen: Much better. Thank you.
+    <<jump Karen_DisplayResolved_EN>>
+
+-> Say it isn't important
+    Player: I don't think it really affects the purchase.
+    <<add_stress 15>>
+    Karen: It's not about the purchase! It's about how the store looks!
+    <<jump Karen_DisplayEscalation_EN>>
+
+-> Say you'll report it
+    Player: I'll report it so maintenance can fix it.
+    <<add_stress 8>>
+    Karen: Fine. I hope it doesn't take a week.
+    <<jump Karen_DisplayResolved_EN>>
+===
+
+title: Karen_DisplayResolved_EN
+---
+Karen: Thank you.
+
+Karen: Now it looks like a professional store again.
+===
+
+title: Karen_DisplayEscalation_EN
+---
+Karen: If customers have to fix the store's presentation themselves, we have a serious problem.
+
+Karen: I want to speak to the manager.
+===

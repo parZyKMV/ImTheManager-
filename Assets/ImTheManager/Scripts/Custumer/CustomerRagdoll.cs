@@ -32,6 +32,11 @@ public class CustomerRagdoll : MonoBehaviour
     [Tooltip("El GameObject del MODELO (el que tiene el Animator y los huesos), NO el objeto raiz con la capsula de navegacion. Si lo dejas vacio, busca el primer Animator en los hijos.")]
     [SerializeField] private Transform skeletonRoot;
 
+    [Header("Colision física")]
+    [Tooltip("Collider SOLIDO (no Trigger) que bloquea fisicamente al jugador mientras el cliente camina normal. " +
+             "Se desactiva durante el ragdoll (tirado/cargado/lanzado) para no dejar una 'pared invisible' donde estaba parado.")]
+    [SerializeField] private Collider solidCollider;
+
     private Rigidbody[] _ragdollBodies;
     private Collider[] _ragdollColliders;
     private Animator _animator;
@@ -74,6 +79,10 @@ public class CustomerRagdoll : MonoBehaviour
         if (skeletonRoot == null)
         {
             Debug.LogError("[CustomerRagdoll] No se encontro el modelo del esqueleto (Animator). Asigna 'Skeleton Root' a mano.");
+            // Arreglos vacios en vez de null: evita NullReferenceException
+            // en DisableRagdoll()/EnableRagdoll() si este caso pasa.
+            _ragdollBodies = new Rigidbody[0];
+            _ragdollColliders = new Collider[0];
         }
         else
         {
@@ -142,6 +151,11 @@ public class CustomerRagdoll : MonoBehaviour
         if (_mainCollider != null)
             _mainCollider.enabled = true;
 
+        // El collider solido vuelve a bloquear al jugador fisicamente -
+        // el cliente esta parado/caminando normal de nuevo.
+        if (solidCollider != null)
+            solidCollider.enabled = true;
+
         if (_animator != null)
             _animator.enabled = true;
     }
@@ -205,6 +219,12 @@ public class CustomerRagdoll : MonoBehaviour
 
         if (_mainCollider != null)
             _mainCollider.enabled = false;
+
+        // Sin esto, el cliente dejaria una "pared invisible" solida en el
+        // lugar exacto donde estaba parado, mientras su cuerpo (visual)
+        // cae/vuela a otro lado por completo.
+        if (solidCollider != null)
+            solidCollider.enabled = false;
 
         foreach (var rb in _ragdollBodies)
             rb.isKinematic = false;
