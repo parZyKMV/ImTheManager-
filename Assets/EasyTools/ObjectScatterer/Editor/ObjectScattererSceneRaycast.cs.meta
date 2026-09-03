@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 69407d979883cc34988ccda318e31e47
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/Editor/ObjectScattererSceneRaycast.cs
+  uploadId: 894182

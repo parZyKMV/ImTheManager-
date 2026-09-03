@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cb17630cf8f332040a4d841481e4f81f
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/README.md
+  uploadId: 894182

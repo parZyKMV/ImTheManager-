@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eaf022fc684aea4bbd535494ac6400d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScannableProduct
-  productData: {fileID: 0}
+  productData: {fileID: 11400000, guid: 52a2e6877ad066d4a81c066a653d8051, type: 2}
 --- !u!65 &4679464777469089361
 BoxCollider:
   m_ObjectHideFlags: 0

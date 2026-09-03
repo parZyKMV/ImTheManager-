@@ -243,7 +243,7 @@ public class PlayerInteractor : MonoBehaviour
         if (_lookedAtCustomer != null)
         {
             quantityText.gameObject.SetActive(true);
-            quantityText.text = "Agarrar cliente [Interact]";
+            quantityText.text = "Grab customer [Interact]";
             return;
         }
 
@@ -254,34 +254,34 @@ public class PlayerInteractor : MonoBehaviour
         if (_lookedAtShelf != null && _lookedAtShelf.NeedsTidying)
         {
             quantityText.gameObject.SetActive(true);
-            quantityText.text = "Estante desordenado — manten Interact para ordenar";
+            quantityText.text = "Shelf is disordered — hold Interact to tidy it";
         }
         else if (heldBox != null && _lookedAtShelf != null)
         {
             ShelfSlot slot = _lookedAtShelf.Slot;
             quantityText.gameObject.SetActive(true);
-            quantityText.text = $"Caja: {heldBox.Quantity}  |  Estante: {slot.CurrentQuantity}/{slot.MaxQuantity}";
+            quantityText.text = $"Box: {heldBox.Quantity}  |  Shelf: {slot.CurrentQuantity}/{slot.MaxQuantity}";
         }
         else if (heldProduct != null && _lookedAtShelf != null && heldProduct.ProductData == _lookedAtShelf.Slot.ProductType)
         {
             quantityText.gameObject.SetActive(true);
-            quantityText.text = "Devolver al estante [Interact]";
+            quantityText.text = "Return to shelf [Interact]";
         }
         else if (_lookedAtShelf != null)
         {
             ShelfSlot slot = _lookedAtShelf.Slot;
             quantityText.gameObject.SetActive(true);
-            quantityText.text = $"Estante: {slot.CurrentQuantity}/{slot.MaxQuantity}";
+            quantityText.text = $"Shelf: {slot.CurrentQuantity}/{slot.MaxQuantity}";
         }
         else if (heldBin != null && _lookedAtTrash != null)
         {
             quantityText.gameObject.SetActive(true);
-            quantityText.text = $"Bote: {heldBin.CollectedCount} recolectada(s)";
+            quantityText.text = $"Bin: {heldBin.CollectedCount} collected";
         }
         else if (_lookedAtTrash != null)
         {
             quantityText.gameObject.SetActive(true);
-            quantityText.text = "Necesitas un bote de basura para esto";
+            quantityText.text = "You need a trash bin for this";
         }
         else if (_lookedAtPickupable != null)
         {
@@ -290,7 +290,7 @@ public class PlayerInteractor : MonoBehaviour
             if (lookedBox != null)
             {
                 quantityText.gameObject.SetActive(true);
-                quantityText.text = $"Caja: {lookedBox.Quantity}";
+                quantityText.text = $"Box: {lookedBox.Quantity}";
             }
             else
             {

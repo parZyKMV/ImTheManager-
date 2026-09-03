@@ -12,12 +12,14 @@ public class CustomerPickupable : MonoBehaviour
     public bool IsHeld { get; private set; } = false;
 
     private CustomerRagdoll _ragdoll;
+    private CustomerAudio _audio;
     private Rigidbody _mainBody;
     private Transform _originalParent; // el padre real dentro del esqueleto, NO holdPoint
 
     void Awake()
     {
         _ragdoll = GetComponent<CustomerRagdoll>();
+        _audio = GetComponent<CustomerAudio>();
     }
 
     /// <summary>Solo se puede agarrar durante Rage Mode y si no esta ya cargado.</summary>
@@ -81,7 +83,14 @@ public class CustomerPickupable : MonoBehaviour
         // _mainBody) - si no, los Joints que conectan los huesos absorben
         // el impulso y se siente como que lo sueltas en vez de lanzarlo.
         if (force != Vector3.zero)
+        {
             _ragdoll.ApplyForceToAllBodies(force);
+
+            // El grito solo suena si de verdad lo LANZASTE (fuerza real),
+            // no si solo lo soltaste parado (OnDropped pasa force=Vector3.zero).
+            // Se corta solo cuando CustomerRagdoll detecta que aterrizo.
+            _audio?.PlayScream();
+        }
 
         _ragdoll.IsBeingHeld = false;
         _ragdoll.ResetDownTimer(); // le da una caida/recuperacion completa nueva desde este momento

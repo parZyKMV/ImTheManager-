@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 03cccefe2a2cbc74fa2103dff8b14c48
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/Editor/ObjectScattererTempPhysicsFromMeshes.cs
+  uploadId: 894182

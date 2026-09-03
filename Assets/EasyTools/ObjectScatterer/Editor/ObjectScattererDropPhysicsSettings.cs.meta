@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 8f109d4c171180442b6d0617cf904c40
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/Editor/ObjectScattererDropPhysicsSettings.cs
+  uploadId: 894182

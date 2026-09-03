@@ -12,6 +12,7 @@ public class ChangeMinigameController : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private CashRegisterManager registerManager;
     [SerializeField] private GameObject panel; // el GameObject raiz de este mini-juego (se activa/desactiva)
+    [SerializeField] private SlideInPanel slideAnimation; // opcional: si el panel tiene SlideInPanel, se usa para animar el cierre
     [SerializeField] private DenominationButton[] denominationButtons;
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button clearButton; // boton para reiniciar la seleccion si el jugador se equivoca
@@ -79,9 +80,7 @@ public class ChangeMinigameController : MonoBehaviour
     void ConfirmChange()
     {
         registerManager.SubmitChange(_selectedAmount);
-
-        if (panel != null)
-            panel.SetActive(false);
+        HidePanel();
     }
 
     /// <summary>
@@ -93,8 +92,16 @@ public class ChangeMinigameController : MonoBehaviour
     public void Close()
     {
         _selectedAmount = 0f;
+        HidePanel();
+    }
 
-        if (panel != null)
+    // Usa el slide de salida si el panel tiene SlideInPanel; si no, cierra
+    // instantaneo como antes (retrocompatible si todavia no le agregaste el componente).
+    void HidePanel()
+    {
+        if (slideAnimation != null)
+            slideAnimation.Hide();
+        else if (panel != null)
             panel.SetActive(false);
     }
 

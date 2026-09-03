@@ -12,6 +12,8 @@ public class ShiftResult
     public int day;
     public float moneyEarned;
     public float finalSanity;
+    public int stressEvents;     // cuantas veces se agrego estres real (no la magnitud, la cantidad de incidentes)
+    public int customersServed;
     public int messesCreated;
     public int messesCleaned;
     public int propsKnockedOver;
@@ -64,6 +66,32 @@ public class ProgressionData : MonoBehaviour
 
         History.Add(result);
         CumulativeScore += result.moneyEarned; // scoring simple v1, ajustar cuando haya mas metricas
+    }
+
+    /// <summary>
+    /// Suma todos los ShiftResult guardados hasta ahora. Uso principal:
+    /// FinalDayController para calcular el pago/puntaje final de toda la partida.
+    /// </summary>
+    public (float totalMoney, int totalCustomers, int totalStressEvents, int totalMessesCreated, int totalMessesCleaned, int totalPropsKnocked) GetAggregatedTotals()
+    {
+        float totalMoney = 0f;
+        int totalCustomers = 0;
+        int totalStressEvents = 0;
+        int totalMessesCreated = 0;
+        int totalMessesCleaned = 0;
+        int totalPropsKnocked = 0;
+
+        foreach (var result in History)
+        {
+            totalMoney += result.moneyEarned;
+            totalCustomers += result.customersServed;
+            totalStressEvents += result.stressEvents;
+            totalMessesCreated += result.messesCreated;
+            totalMessesCleaned += result.messesCleaned;
+            totalPropsKnocked += result.propsKnockedOver;
+        }
+
+        return (totalMoney, totalCustomers, totalStressEvents, totalMessesCreated, totalMessesCleaned, totalPropsKnocked);
     }
 
     /// <summary>Avanza al siguiente dia. No hace nada si ya es el ultimo dia.</summary>

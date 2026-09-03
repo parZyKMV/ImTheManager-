@@ -54,6 +54,15 @@ public class RegisterModeController : MonoBehaviour
         }
 
         Instance = this;
+
+        // IMPORTANTE: estos bools son 'static', asi que sobreviven a un
+        // SceneManager.LoadScene() dentro de la misma sesion de Play (ej.
+        // el "Reiniciar" del pause menu). Sin este reset, si pausabas
+        // justo estando en modo caja, quedaban pegados en 'true' para
+        // siempre - bloqueando cosas como que los clientes te busquen
+        // para hablar (SeekPlayerAndTalkAction los chequea).
+        IsPlayerInRegisterMode = false;
+        IsEndOfTransactionPanelActive = false;
     }
 
     void OnEnable()

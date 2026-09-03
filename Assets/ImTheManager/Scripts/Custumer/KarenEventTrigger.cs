@@ -77,22 +77,17 @@ public class KarenEventTrigger : MonoBehaviour
             return;
         }
 
+        if (!NodeExists(startNode))
+        {
+            Debug.LogError($"[KarenEventTrigger] El nodo '{startNode}' no existe en el Yarn Project asignado. Revisa que el .yarn este incluido en el proyecto y que el nombre coincida EXACTO con el 'title:' de adentro (no el nombre del archivo).");
+            return;
+        }
+
         IsActive = true;
         _didLockPlayer = true;
         LockPlayer(true);
 
-        try
-        {
-            dialogueRunner.StartDialogue(startNode);
-            Debug.Log($"[KarenEventTrigger] dialogueRunner.StartDialogue('{startNode}') se ejecuto sin lanzar excepcion.");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[KarenEventTrigger] StartDialogue('{startNode}') lanzo una excepcion: {e.Message}\nProbablemente ese nodo no existe en el Yarn Project asignado al Dialogue Runner.");
-            // Revertimos el estado para no quedar trabados en IsActive=true para siempre.
-            IsActive = false;
-            LockPlayer(false);
-        }
+        dialogueRunner.StartDialogue(startNode);
     }
 
     /// <summary>
@@ -115,10 +110,36 @@ public class KarenEventTrigger : MonoBehaviour
             return;
         }
 
+        if (!NodeExists(startNode))
+        {
+            Debug.LogError($"[KarenEventTrigger] El nodo '{startNode}' no existe en el Yarn Project asignado. Revisa el nombre exacto del 'title:' dentro del .yarn.");
+            return;
+        }
+
         IsActive = true;
         _didLockPlayer = false;
 
         dialogueRunner.StartDialogue(startNode);
+    }
+
+    // DialogueRunner.NodeExists() ya no existe en esta version de Yarn
+    // Spinner (la API async movio esa consulta al YarnProject). Chequeamos
+    // directo contra YarnProject.NodeNames, que es donde vive ahora.
+    bool NodeExists(string nodeName)
+    {
+        if (dialogueRunner.YarnProject == null)
+        {
+            Debug.LogError("[KarenEventTrigger] El Dialogue Runner no tiene un Yarn Project asignado.");
+            return false;
+        }
+
+        foreach (var name in dialogueRunner.YarnProject.NodeNames)
+        {
+            if (name == nodeName)
+                return true;
+        }
+
+        return false;
     }
 
     void HandleDialogueComplete()

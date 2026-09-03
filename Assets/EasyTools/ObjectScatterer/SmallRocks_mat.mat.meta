@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 343b1d1df6a72434593850408ad1fe9e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/SmallRocks_mat.mat
+  uploadId: 894182

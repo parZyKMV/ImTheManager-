@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7a183e5b059970d41b06e90353720c00
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/Chomper/Materials/Chomper_Body_Mat.mat
+  uploadId: 894182

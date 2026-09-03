@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductData
   productName: Shirts
   icon: {fileID: 0}
-  price: 10
+  price: 34.99
   prefab: {fileID: 4321067046529722906, guid: 5d8e98dde02ae714387deb67115f0950, type: 3}

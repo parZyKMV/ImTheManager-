@@ -21,6 +21,7 @@ public class EndOfShiftUI : MonoBehaviour
     [SerializeField] private RPS_ThirdPersonController playerMovement;
     [SerializeField] private GameObject panel; // el panel visual, este SI puede estar desactivado por defecto
     [SerializeField] private Transform dayStartPoint; // donde aparece el jugador al empezar cada dia nuevo
+    [SerializeField] private GameObject HDU;
 
     [Header("UI")]
     [SerializeField] private TMP_Text dayText;
@@ -61,23 +62,25 @@ public class EndOfShiftUI : MonoBehaviour
         // se queda pegada mientras lo teletransportamos a Day Start Point.
         RegisterModeController.Instance?.ForceExitForShiftEnd();
 
+        HDU.SetActive(false);
+
         float money = ShiftStatsTracker.Instance != null ? ShiftStatsTracker.Instance.MoneyEarnedThisShift : 0f;
         int customers = ShiftStatsTracker.Instance != null ? ShiftStatsTracker.Instance.CustomersServedThisShift : 0;
         int currentDay = ProgressionData.Instance != null ? ProgressionData.Instance.CurrentDay : 1;
 
         if (dayText != null)
-            dayText.text = $"Fin del Día {currentDay}";
+            dayText.text = $"End of Day {currentDay}";
 
         if (moneyEarnedText != null)
-            moneyEarnedText.text = $"Dinero ganado: ${money:F2}";
+            moneyEarnedText.text = $"Money earned: ${money:F2}";
 
         if (customersServedText != null)
-            customersServedText.text = $"Clientes atendidos: {customers}";
+            customersServedText.text = $"Customers served: {customers}";
 
         int propsKnocked = RageModeController.Instance != null ? RageModeController.Instance.TotalPropsKnockedOverThisShift : 0;
 
         if (propsKnockedOverText != null)
-            propsKnockedOverText.text = $"Cosas derribadas: {propsKnocked}";
+            propsKnockedOverText.text = $"Things knocked over: {propsKnocked}";
 
         // Guarda el resultado en el progreso general de la partida.
         if (ProgressionData.Instance != null)
@@ -87,6 +90,8 @@ public class EndOfShiftUI : MonoBehaviour
                 day = currentDay,
                 moneyEarned = money,
                 finalSanity = SanityMeter.Instance != null ? SanityMeter.Instance.CurrentStress : 0f,
+                stressEvents = SanityMeter.Instance != null ? SanityMeter.Instance.StressEventCountThisShift : 0,
+                customersServed = customers,
                 messesCreated = CleaningSystem.Instance != null ? CleaningSystem.Instance.TotalMessesCreated : 0,
                 messesCleaned = CleaningSystem.Instance != null ? CleaningSystem.Instance.TotalMessesCleaned : 0,
                 propsKnockedOver = propsKnocked
@@ -118,6 +123,8 @@ public class EndOfShiftUI : MonoBehaviour
 
         if (panel != null)
             panel.SetActive(false);
+
+        HDU.SetActive(true);
 
         // Limpia el "piso de la tienda" para el dia nuevo: los clientes de
         // ayer desaparecen (no tiene sentido que sigan parados ahi), pero

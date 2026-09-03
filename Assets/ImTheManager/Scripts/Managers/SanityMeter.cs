@@ -29,6 +29,9 @@ public class SanityMeter : MonoBehaviour
     public float CurrentStress => currentStress;
     public float NormalizedStress => Mathf.InverseLerp(minSanity, maxSanity, currentStress);
 
+    /// <summary>Cuantas veces se agrego estres (amount > 0) en el turno actual - se resetea con ResetMeter().</summary>
+    public int StressEventCountThisShift { get; private set; } = 0;
+
     private bool _hasFiredMeterFull = false;
 
     void Awake()
@@ -57,6 +60,9 @@ public class SanityMeter : MonoBehaviour
         float previous = currentStress;
         currentStress = Mathf.Clamp(currentStress + amount, minSanity, maxSanity);
 
+        if (amount > 0f)
+            StressEventCountThisShift++;
+
         onStressAdded?.Invoke(amount, source);
 
         if (!Mathf.Approximately(previous, currentStress))
@@ -79,6 +85,7 @@ public class SanityMeter : MonoBehaviour
     {
         currentStress = minSanity;
         _hasFiredMeterFull = false;
+        StressEventCountThisShift = 0;
         onSanityChanged?.Invoke(currentStress);
     }
 }

@@ -42,6 +42,7 @@ public class CustomerRagdoll : MonoBehaviour
     private Animator _animator;
     private NavMeshAgent _navAgent;
     private BehaviorGraphAgent _behaviorAgent;
+    private CustomerAudio _audio;
     private Collider _mainCollider;
     private Rigidbody _mainRagdollBody; // referencia de "donde quedo tirado" para pararse ahi
 
@@ -97,6 +98,7 @@ public class CustomerRagdoll : MonoBehaviour
 
         _navAgent = GetComponent<NavMeshAgent>();
         _behaviorAgent = GetComponent<BehaviorGraphAgent>();
+        _audio = GetComponent<CustomerAudio>();
         _mainCollider = GetComponent<Collider>();
 
         if (_ragdollBodies != null && _ragdollBodies.Length > 0)
@@ -245,6 +247,12 @@ public class CustomerRagdoll : MonoBehaviour
             Debug.LogWarning("[CustomerRagdoll] No hay ningun Rigidbody en _ragdollBodies para aplicarle fuerza.");
         }
 
+        // Solo suena si es un impacto REAL (fuerza distinta de cero) - si
+        // esto se disparo por CustomerPickupable.OnPickedUp (agarrar con
+        // Rage Mode, fuerza cero), no hubo ningun golpe, no debe sonar nada.
+        if (force != Vector3.zero)
+            _audio?.PlayHit();
+
         if (hitEffect != null)
         {
             ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
@@ -260,6 +268,9 @@ public class CustomerRagdoll : MonoBehaviour
     {
         foreach (var rb in _ragdollBodies)
             rb.isKinematic = true;
+
+        // Aterrizo de verdad - si estaba gritando por el lanzamiento, se corta aca.
+        _audio?.StopScream();
     }
 
     void GetUp()

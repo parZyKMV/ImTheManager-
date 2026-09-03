@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 5aedea11ea6d46746a3d7a6b5adba40d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371612
+  packageName: Easy GameObject Scatterer
+  packageVersion: 1.0
+  assetPath: Assets/EasyTools/ObjectScatterer/Editor/ObjectScattererBrushParamsWindow.cs
+  uploadId: 894182

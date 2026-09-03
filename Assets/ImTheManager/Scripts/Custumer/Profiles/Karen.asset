@@ -18,12 +18,12 @@ MonoBehaviour:
   complaintChance: 1
   complaintTriggers: 00000000010000000200000003000000
   complaintStressAmount: 20
-  messChance: 0
-  possibleMessTypes: 02000000
+  messChance: 0.099
+  possibleMessTypes: 0200000001000000
   askQuestionChance: 0.153
   dialogueStartNodes:
   - Karen_Encounter
-  - Karen_PriceComplaint_EN
+  - ' Karen_PriceComplaint_EN'
   - Karen_DirtyFloor_EN
   - Karen_CouponComplaint_EN
   - Karen_BrokenDisplay_EN
